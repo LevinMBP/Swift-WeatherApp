@@ -1,9 +1,8 @@
-//
-//  CitiesViewController.swift
-//  Project2
-//
-//  Created by Juscelino de Moraes Gonçalves Junior on 2024-07-18.
-//
+
+
+
+
+
 
 import UIKit
 
@@ -12,20 +11,15 @@ class CitiesViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-     var Cities: [citiesAdd] = []
+    var Cities: [WeatherResponse] = []
     var statusUnit: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadDefaultItems()
         tableView.dataSource = self
     }
     
-    private func loadDefaultItems(){
-        //Cities.append(citiesAdd(title: "London", temp: 23.45))
-      
-    }
 }
 
 extension CitiesViewController: UITableViewDataSource{
@@ -38,14 +32,14 @@ extension CitiesViewController: UITableViewDataSource{
         let city = Cities[indexPath.row]
         
         var content = cell.defaultContentConfiguration()
-        content.text = city.title
+        content.text = city.location.name
         
 
         if statusUnit {
-            content.secondaryText = String(city.tempF)
+            content.secondaryText = "\(city.current.temp_f)"
         }
         else {
-            content.secondaryText = String(city.temp)
+            content.secondaryText = "\(city.current.temp_c)"
         }
         
         
@@ -53,16 +47,6 @@ extension CitiesViewController: UITableViewDataSource{
         
         return cell
     }
-    
-    
-    
-}
-
-struct citiesAdd{
-    let title: String
-    let temp: Double
-    let tempF: Double
-
 }
 
 

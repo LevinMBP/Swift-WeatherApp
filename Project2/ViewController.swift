@@ -1,9 +1,5 @@
-//
-//  ViewController.swift
-//  Project2
-//
-//  Created by Kristian Burnard on 2024-07-05.
-//
+
+
 
 import UIKit
 import CoreLocation
@@ -11,7 +7,7 @@ import CoreLocation
 class ViewController: UIViewController {
     
     private var currentWeather: WeatherResponse?
-    var weatherInfo : [citiesAdd] = []
+    var weatherInfo : [WeatherResponse] = []
     var weatherUnit: Bool = false
     
     private let iconCodes = [1000: "sun.max.fill", 1003: "cloud.sun.fill", 1180: "cloud.drizzle"]
@@ -63,6 +59,13 @@ class ViewController: UIViewController {
         
     }
     
+    @IBAction func onLocationTapped(_ sender: UIButton) {
+        // Get the user location
+        weatherUnit = false
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+    }
+    
     @IBAction func citiesTapped(_ sender: UIButton) {
         
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "CitiesViewController") as! CitiesViewController
@@ -71,13 +74,7 @@ class ViewController: UIViewController {
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    @IBAction func onLocationTapped(_ sender: UIButton) {
-        // Get the user location
-        weatherUnit = false
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestLocation()
-    }
-    
+
     @IBAction func onCelsiusTapped(_ sender: UIButton) {
         print("C tapped")
         guard let showTemp = currentWeather?.current.temp_c else {
@@ -87,6 +84,7 @@ class ViewController: UIViewController {
         temperatureLabel.text = "\(showTemp)"
         renderButtonStyle(category: "C")
     }
+    
     @IBAction func onFahrenheitTapped(_ sender: UIButton) {
         print("F tapped")
         guard let showTemp = currentWeather?.current.temp_f else {
@@ -131,14 +129,13 @@ class ViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                     self.currentWeather = weatherResponse
-                    //self.weatherList.append(weatherResponse)
+                    self.weatherInfo.append(weatherResponse)
+                    
                     self.locationLabel.text = weatherResponse.location.name
                     self.temperatureLabel.text = "\(weatherResponse.current.temp_c)"
                     self.weatherStatus.text = "\(weatherResponse.current.condition.text)"
                     self.loadWeatherImage(palleteCode: weatherResponse.current.condition.code)
-                    self.weatherInfo.append(citiesAdd(title: weatherResponse.location.name, temp: weatherResponse.current.temp_c ,tempF: weatherResponse.current.temp_f))
                     self.loadWeatherImage(palleteCode: weatherResponse.current.condition.code)
-                    
                     self.searchTextField.text = ""
                     self.renderButtonStyle(category: "C")
                 }
